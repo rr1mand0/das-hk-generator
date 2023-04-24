@@ -79,10 +79,12 @@ Type=Market;StopPrice=Price;CXL ALLSYMB SELL;Sell
 NumPad+:Chart ZoomIn:ZoomIn
 NumPad-:Chart ZoomOut:ZoomOut
 Alt+PageUp:Buy@ask:Route=Limit;Share=DefShare;Price=Ask+0.01;Buy
-Alt+1:SL Risk Short {{risk}}:~ 151:Price=AvgCost;Share=Pos;Price=Price*Share+{{risk}};Price
+{%- for i in range(1,4) -%}
+Alt+{{i}}:SL Risk Short {{risk*i}}:~ 151:Price=AvgCost;Share=Pos;Price=Price*Share+{{risk*i}};Price
 =Price/Share;Price=Round2;Share=Pos;Route=Stop;Stop
 Type=Market;StopPrice=Price;~0D~0ACXL ALLSYMB Buy;B
 uy
+{%- endfor -%}
 Alt+2:SL Risk Short 500:~ 149:Price=AvgCost;Share=Pos;Price=Price*Share+500;Price
 =Price/Share;Price=Round2;Share=Pos;Route=Stop;Stop
 Type=Market;StopPrice=Price;CXL ALLSYMB Buy;Buy
