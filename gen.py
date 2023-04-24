@@ -19,11 +19,7 @@ content = template.render(
         account=args.account
     )
 
-# c = []
-
-# for line in content.split('\n'):
-#     c.append(line.strip())
-#     c.append('\r\n')
+dos = content.replace('\n', '\r\n')
     
 with open(args.output, 'w') as fh:
-    fh.write(content) #"".join(c))
+    fh.write(dos)
