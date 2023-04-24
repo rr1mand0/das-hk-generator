@@ -39,8 +39,8 @@ Alt+End:Close Short Quick:CXL ALLSYMB;ROUTE=ARCAL;TIF=DAY+;HANDINST=ANY;Share=Po
 Ctrl+End:Close Long Quick:CXL ALLSYMB;ROUTE=ARCAL;TIF=DAY+;HANDINST=ANY;Share=Pos;Price=Bid-0.20;Sell
 
 {# Pre-trade calculation: position size based on SL and last price #}
-,:Calc Risk 250 based on abs(Price-ask):Share=Price*100;DEFShare=Share;Price=Ask*100;SShare=Price;Share=SShare-DEFShare;SShare=Share;Share=DEFShare;Price=Share/100;Share=250*100/SShare;ToggSShare=off;DEFShare=BP*0.5;TogSShare=off;DEFShare=Share/2;FOCUS Share-:Share/2:Share=Share/2
-.:Calc Risk $500 based on abs(Price-ask):Share=Price*100;DEFShare=Share;Price=Ask*100;SShare=Price;Share=SShare-DEFShare;SShare=Share;Share=DEFShare;Price=Share/100;Share=500*100/SShare;ToggSShare=off;DEFShare=BP*0.5;TogSShare=off;DEFShare=Share/2;FOCUS Share
+,:Calc Risk {{risk}} based on abs(Price-ask):Share=Price*100;DEFShare=Share;Price=Ask*100;SShare=Price;Share=SShare-DEFShare;SShare=Share;Share=DEFShare;Price=Share/100;Share={{risk}}*100/SShare;ToggSShare=off;DEFShare=BP*0.5;TogSShare=off;DEFShare=Share/2;FOCUS Share-:Share/2:Share=Share/2
+.:Calc Risk ${{2*risk}} based on abs(Price-ask):Share=Price*100;DEFShare=Share;Price=Ask*100;SShare=Price;Share=SShare-DEFShare;SShare=Share;Share=DEFShare;Price=Share/100;Share={{2*risk}}*100/SShare;ToggSShare=off;DEFShare=BP*0.5;TogSShare=off;DEFShare=Share/2;FOCUS Share
 
 {# Profit projections #}
 /:PT Projected (price, position):Share=Price*100;DEFSHARE=Share;Price=AvgCost*100;Share=Price;SShare=Share;Share=DEFShare-SShare*POS/100;Price=Share;TogSShare=off;DEFSHARE=100=:Share*2:Share=Share*2
@@ -102,8 +102,8 @@ KeyDown:Load Price - .01:Price=Price-0.01
 Shift+KeyLeft:Load Pos-500:Share=Share-500
 Shift+KeyRight:Load Pos+500:Share=Share+500
 
-Shift+KeyUp:Load PT Price+$250 :Share=Pos;Price=Price*Share+250;Price=Price/Share;Price=Round2
-Shift+KeyDown:Load PT Price-$250:Share=Pos;Price=Price*Share-250;Price=Price/Share;Price=Round2
+Shift+KeyUp:Load PT Price+${{risk}} :Share=Pos;Price=Price*Share+{{risk}};Price=Price/Share;Price=Round2
+Shift+KeyDown:Load PT Price-${{risk}}:Share=Pos;Price=Price*Share-{{risk}};Price=Price/Share;Price=Round2
 
 Ctrl+KeyLeft:Load Pos-1000 :Share=Share-1000
 Ctrl+KeyRight:Load Pos+1000 :Share=Share+1000
