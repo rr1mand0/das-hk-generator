@@ -13,13 +13,13 @@ Ctrl+Home:default:Share=DEFSHARE+0
 ,:Calc Risk {{ risk }} based on abs(Price-ask):~ 220:Share=Price*100;DEFShare=Share;Price=Ask*100;SShare
 =Price;Share=SShare-DEFShare;SShare=Share;Share=DEF
 Share;Price=Share/100;Share={{ risk }}*100/SShare;ToggSSha
-re=off;DEFShare=BP*0.5;~0D~0ATogSShare=off;DEFShare
+re=off;DEFShare=BP*0.5;SShare=off;DEFShare
 =Share/2;FOCUS Share
 -:Share/2:Share=Share/2
 .:Calc Risk ${{ risk*2 }} based on abs(Price-ask):~ 220:Share=Price*100;DEFShare=Share;Price=Ask*100;SShare
 =Price;Share=SShare-DEFShare;SShare=Share;Share=DEF
 Share;Price=Share/100;Share={{ risk*2 }}*100/SShare;ToggSSha
-re=off;DEFShare=BP*0.5;~0D~0ATogSShare=off;DEFShare
+re=off;DEFShare=BP*0.5;SShare=off;DEFShare
 =Share/2;FOCUS Share
 /:PT Projected (price, position):~ 142:Share=Price*100;DEFSHARE=Share;Price=AvgCost*100;Sh
 are=Price;SShare=Share;Share=DEFShare-SShare*POS/10
@@ -28,7 +28,7 @@ are=Price;SShare=Share;Share=DEFShare-SShare*POS/10
 =:Share*2:Share=Share*2
 Ctrl+KeyDown:Price - .05:Price=Price-0.05
 Ctrl+A:Focus Symbol:Focus Symbol
-Ctrl+C:Close Long Pos*0.25:ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos*0.25;Price=Bid-0.03;~0D~0ACXL ALLSYMB;SELL
+Ctrl+C:Close Long Pos*0.25:ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos*0.25;Price=Bid-0.03;CXL ALLSYMB;SELL
 Ctrl+D:Focus price:Focus Price
 [:Price = Bid:Price=Bid;Route=Limit
 \:Focus Replace:Focus Replace
@@ -38,8 +38,8 @@ Ctrl+End:close long:Route=Limit;Shares=Pos;Price=Bid-0.03;Sell
 Ctrl+Q:Cancel orders:CXL ALLSYMB
 Ctrl+S:Focus Share:Focus Share
 Ctrl+W:Cancel last - long:CXL LAST
-Ctrl+X:Close Long Pos*0.5:ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos*0.5;Price=Bid-0.03;~0D~0ACXL ALLSYMB;SELL
-Ctrl+Z:Close Long Pos:ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos;Price=Bid-0.03;~0D~0ACXL ALLSYMB;SELL
+Ctrl+X:Close Long Pos*0.5:ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos*0.5;Price=Bid-0.03;CXL ALLSYMB;SELL
+Ctrl+Z:Close Long Pos:ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos;Price=Bid-0.03;CXL ALLSYMB;SELL
 Ctrl+F12:Config Login:Login
 Ctrl+KeyLeft:Share Size -1000 shares:Share=Share-1000
 PageUp:Limit Default@Ask Buy:Route=Limit;Share=DefShare;Price=Bid;BUY
@@ -56,9 +56,9 @@ F4:Chart Daily:DayChart 1d 365d; ZoomFit
 F5:Chart 1H chart:MinuteChart 60 160; ZoomFit
 KeyUp:Price + .01:Price=Price+0.01
 Ctrl+KeyUp:Price + .05:Price=Price+0.05
-Alt+End:Close Short:CXL ALLSYMB;~0D~0AROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos;Price=Ask+0.10;BUY;
-Shift+End:Close Long:CXL ALLSYMB;~0D~0AROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos;Price=Bid-0.05;SELL;
-Shift+Home:Close Long:CXL ALLSYMB;~0D~0AROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos/2;Price=Bid-0.05;SELL;
+Alt+End:Close Short:CXL ALLSYMB;ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos;Price=Ask+0.10;BUY;
+Shift+End:Close Long:CXL ALLSYMB;ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos;Price=Bid-0.05;SELL;
+Shift+Home:Close Long:CXL ALLSYMB;ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos/2;Price=Bid-0.05;SELL;
 Shift+ESC:Stop Setup@last:Share=0;Focus Share
 Insert:Best Fit chart:ZoomFit
 KeyDown:Price - .01:Price=Price-0.01
@@ -66,7 +66,7 @@ Ctrl+PageUp:Limit default@price buy:Route=Limit;Share=DefShare;BUY
 Ctrl+PageDown:Limit default@price sell:Route=Limit;Share=DefShare;Sell
 PageDown:Limit Default@Ask Sell:Route=Limit;Share=DefShare;Price=Ask+0.00;SELL
 KeyLeft:Share Size -100 Shares:Share=Share-100
-Alt+Home:Close Short:CXL ALLSYMB;~0D~0AROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos/2;Price=Ask+0.05;BUY;
+Alt+Home:Close Short:CXL ALLSYMB;ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos/2;Price=Ask+0.05;BUY;
 Shift+:Default Size:DefShare=Share
 Shift+PageDown:Sell@bid:Route=Limit;Share=DefShare;Price=Bid-0.01;Sell
 Ctrl+Shift+PageDown:SL Risk - {{ risk }} Long:~ 151:Price=AvgCost;Share=Pos;Price=Price*Share-{{ risk }};Price
@@ -77,7 +77,7 @@ NumPad-:Chart ZoomOut:ZoomOut
 Alt+PageUp:Buy@ask:Route=Limit;Share=DefShare;Price=Ask+0.01;Buy
 Alt+1:SL Risk Short {{ risk }}:~ 151:Price=AvgCost;Share=Pos;Price=Price*Share+{{ risk }};Price
 =Price/Share;Price=Round2;Share=Pos;Route=Stop;Stop
-Type=Market;StopPrice=Price;~0D~0ACXL ALLSYMB Buy;B
+Type=Market;StopPrice=Price;CXL ALLSYMB Buy;B
 uy
 Alt+2:SL Risk Short {{ risk*2 }}:~ 149:Price=AvgCost;Share=Pos;Price=Price*Share+{{ risk*2 }};Price
 =Price/Share;Price=Round2;Share=Pos;Route=Stop;Stop
@@ -86,13 +86,13 @@ Alt+3:SL Risk Short {{ risk*3 }} :~ 149:Price=AvgCost;Share=Pos;Price=Price*Shar
 =Price/Share;Price=Round2;Share=Pos;Route=Stop;Stop
 Type=Market;StopPrice=Price;CXL ALLSYMB Buy;Buy
 Shift+KeyUp:PT Price+${{ risk }} :Share=Pos;Price=Price*Share+{{ risk }};Price=Price/Share;Price=Round2
-Alt+C:Close Short Pos*0.25:ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos*0.25;Price=Ask+0.03;~0D~0ACXL ALLSYMB Buy;Buy
+Alt+C:Close Short Pos*0.25:ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos*0.25;Price=Ask+0.03;CXL ALLSYMB Buy;Buy
 Alt+H:Chart HorizontalLine:HorizontalLine
 Alt+Q:Cancel orders Copy:CXL ALLSYMB
 Ctrl+KeyRight:Share Size +1000 Shares:Share=Share+1000
 Alt+W:Cancel last:CXL LAST
-Alt+X:Close Short Pos*0.50:ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos*0.5;Price=Ask+0.03;~0D~0ACXL ALLSYMB Buy;Buy
-Alt+Z:Close Short Pos:ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos;Price=Ask+0.03;~0D~0ACXL ALLSYMB Buy;Buy
+Alt+X:Close Short Pos*0.50:ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos*0.5;Price=Ask+0.03;CXL ALLSYMB Buy;Buy
+Alt+Z:Close Short Pos:ROUTE=ARCAL ;TIF=DAY+;HANDINST=ANY;Share=Pos;Price=Ask+0.03;CXL ALLSYMB Buy;Buy
 F10:browser:https://seekingalpha.com/symbol/%SYMB%/press-releases
 F12:Config Hotkey:Hotkey
 KeyRight:Share Size +100 Shares:Share=Share+100
