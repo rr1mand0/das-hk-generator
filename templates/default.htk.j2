@@ -1,16 +1,15 @@
 F12:Config Hotkey:Hotkey
 
-Alt+\:Auto Short SL B/E:Price=AvgCost;Share=Pos;Price=Price*Share+0;Price=Price/Share;Price=Round2;Share=Pos;Route=Stop;StopType=Market;StopPrice=Price;CXL ALLSYMB Buy;Buy
-{%- for i in range(1,4) %}
-Alt+{{i}}:Auto Short SL ${{risk*i}}:Price=AvgCost;Share=Pos;Price=Price*Share+{{risk*i}};Price=Price/Share;Price=Round2;Share=Pos;Route=Stop;StopType=Market;StopPrice=Price;CXL ALLSYMB Buy;Buy
-Alt+F{{i}}:Auto Short PT ${{i*risk}}:Price=AvgCost;Share=Pos;Price=Price*Share-{{i*risk}};Price=Price/Share;Price=Round2;Share=Pos/4;Route=LIMIT;Buy;Buy;Buy;Buy
+Alt+\:Auto Short PT0 B/E:Price=AvgCost;Share=Pos;Price=Price*Share+0;Price=Price/Share;Price=Round2;Share=Pos;Route=Stop;StopType=Market;StopPrice=Price;CXL ALLSYMB Buy;Buy
+{%- for i in range(1,nhk) %}
+Alt+{{i}}:Auto Short SL{{i}} ${{risk*i}}:Price=AvgCost;Share=Pos;Price=Price*Share+{{risk*i}};Price=Price/Share;Price=Round2;Share=Pos;Route=Stop;StopType=Market;StopPrice=Price;CXL ALLSYMB Buy;Buy
+Alt+F{{i}}:Auto Short PT{{i}} ${{i*risk}}:Price=AvgCost;Share=Pos;Price=Price*Share-{{i*risk}};Price=Price/Share;Price=Round2;Share=Pos/{{npt}};Route=LIMIT;Buy;{%- for vv in range(2,npt+1) %}Price=Price-{{pto}};Buy;{%- endfor %}
 {%- endfor %}
 
-Shift+\:Auto Long SL B/E:Price=AvgCost;Share=Pos;Price=Price*Share-0;Price=Price/Share;Price=Round2;Share=Pos;Route=Stop;StopType=Market;StopPrice=Price;CXL ALLSYMB SELL;Sell
-{%- for i in range(1,4) %}
-Shift+{{i}}:Auto Long SL ${{i*risk}}:Price=AvgCost;Share=Pos;Price=Price*Share-{{i*risk}};Price=Price/Share;Price=Round2;Share=Pos;Route=Stop;StopType=Market;StopPrice=Price;CXL ALLSYMB SELL;Sell
-Shift+F{{i}}:Auto Long PT ${{i*risk}}:Price=AvgCost;Share=Pos;Price=Price*Share+{{i*risk}};Price=Price/Share;Price=Round2;Share=Pos/4;Route=LIMIT;Sell;Sell;Sell;Sell
-{%- endfor %}
+Shift+\:Auto Long PT0 B/E:Price=AvgCost;Share=Pos;Price=Price*Share-0;Price=Price/Share;Price=Round2;Share=Pos;Route=Stop;StopType=Market;StopPrice=Price;CXL ALLSYMB SELL;Sell
+{%- for i in range(1,nhk) %}
+Shift+{{i}}:Auto Long SL{{i}} ${{i*risk}}:Price=AvgCost;Share=Pos;Price=Price*Share-{{i*risk}};Price=Price/Share;Price=Round2;Share=Pos;Route=Stop;StopType=Market;StopPrice=Price;CXL ALLSYMB SELL;Sell
+Shift+F{{i}}:Auto Long PT{{i}} ${{i*risk}}:Price=AvgCost;Share=Pos;Price=Price*Share+{{i*risk}};Price=Price/Share;Price=Round2;Share=Pos/{{npt}};Route=LIMIT;Sell;{%- for vv in range(2,npt+1) %} Price=Price+{{pto}};Sell;{%- endfor %} {%- endfor %}
 
 
 {# chart configuration #}
@@ -40,11 +39,17 @@ Alt+End:Close Short Quick:CXL ALLSYMB;ROUTE=ARCAL;TIF=DAY+;HANDINST=ANY;Share=Po
 Ctrl+End:Close Long Quick:CXL ALLSYMB;ROUTE=ARCAL;TIF=DAY+;HANDINST=ANY;Share=Pos;Price=Bid-0.20;Sell
 
 {# Pre-trade calculation: position size based on SL and last price #}
-,:Calc Risk {{risk}} based on abs(Price-ask):Share=Price*100;DEFShare=Share;Price=Ask*100;SShare=Price;Share=SShare-DEFShare;SShare=Share;Share=DEFShare;Price=Share/100;Share={{risk}}*100/SShare;ToggSShare=off;DEFShare=BP*0.5;TogSShare=off;DEFShare=Share/2;FOCUS Share-:Share/2:Share=Share/2
-.:Calc Risk ${{2*risk}} based on abs(Price-ask):Share=Price*100;DEFShare=Share;Price=Ask*100;SShare=Price;Share=SShare-DEFShare;SShare=Share;Share=DEFShare;Price=Share/100;Share={{2*risk}}*100/SShare;ToggSShare=off;DEFShare=BP*0.5;TogSShare=off;DEFShare=Share/2;FOCUS Share
+,:Calc Risk {{risk}} ticks based on abs(Price-ask):Share=Price*100;DEFShare=Share;Price=Last+Ask-Bid;Price=Price*100;SShare=Price;Share=SShare-DEFShare;SShare=Share;Share=DEFShare;Price=Share/100;Share={{risk}}*100/SShare;ToggSShare=off;DEFShare=BP*0.5;TogSShare=off;DEFShare=Share/2;FOCUS Share-:Share/2:Share=Share/2
+.:Calc Risk {{2*risk}} ticks based on abs(Price-ask):Share=Price*100;DEFShare=Share;Price=Last+Ask-Bid;Price=Price*100;SShare=Price;Share=SShare-DEFShare;SShare=Share;Share=DEFShare;Price=Share/100;Share={{3*risk}}*100/SShare;ToggSShare=off;DEFShare=BP*0.5;TogSShare=off;DEFShare=Share/2;FOCUS Share
 
 {# Profit projections based on price and current position #}
-/:PT Projected (price, position):Share=Price*100;DEFSHARE=Share;Price=AvgCost*100;Share=Price;SShare=Share;Share=DEFShare-SShare*POS/100;Price=Share;TogSShare=off;DEFSHARE=100
+/:PT Projected (price, position):Share=Price*100;DEFSHARE=Share;Price=AvgCost*100;Share=Price;SShare=Share;Share=DEFShare;Price=Share/100;
+{%- if future == 1 -%}
+Share=DEFShare-SShare*POS/100;;DEFSHARE=100;
+{%- else -%}
+Share=DEFShare-SShare*{{future*10}}*POS/1000;;DEFSHARE=1;
+{%- endif -%}
+TogSShare=off
 
 {# Switch focus #}
 Ctrl+A:Focus Symbol:Focus Symbol
@@ -92,8 +97,10 @@ F12:Config Hotkey:Hotkey
 Ctrl+F12:Config Login:Login
 
 {# Load share #}
-=Share/2;FOCUS Share
--:Share/2:Share=Share/2
+=:Share*2:Share=Share*2;FOCUS Share
++:Share*3:Share=Share*3;FOCUS Share
+-:Share/2:Share=Share/2;FOCUS Share
+_:Share/3:Share=Share/3;FOCUS Share
 
 KeyLeft:Load pos-100:Share=Share-100
 KeyRight:Load pos+100:Share=Share+100
@@ -120,3 +127,7 @@ Alt+Q:Cancel orders:CXL ALLSYMB
 Alt+W:Cancel last:CXL LAST
 Shift+Q:Cancel orders:CXL ALLSYMB
 Shift+W:Cancel last:CXL LAST
+
+
+{# OTO #}
+Ctrl+T:OTO:Price=Bid;Share=DEFSHARE+0;Route=Limit;BUY;TriggerOrder=RT:STOP STOPTYPE:LIMIT PX:AvgCost+0.10 STOPPRICE:AvgCost-0.10 ACT:SELL QTY:100 TIF:DAY
