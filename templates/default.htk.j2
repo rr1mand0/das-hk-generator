@@ -33,7 +33,9 @@ Shift+;:Load Stop Sell:Route=Stop;StopType=Market;StopPrice=Price;Sell=Load
 [:Load Price = Bid:Price=Bid;Route=Limit
 ]:Load Price = Ask:Price=Ask
 
-
+{# trailing stop #}
+Ctrl+Shift+1:Trail long:TIF=DAY+;Share=Pos;Route=Stop;StopType=Trailing;TrailPrice=last-Price;SELL=Load;TrailPrice=Round2
+Alt+Shift+1:Trail short:TIF=DAY+;Share=Pos;Route=Stop;StopType=Trailing;TrailPrice=Price-last;Buy=Load;TrailPrice=Round2
 
 Alt+End:Close Short Quick:CXL ALLSYMB;ROUTE=ARCAL;TIF=DAY+;HANDINST=ANY;Share=Pos;Price=Ask+0.20;BUY;
 Ctrl+End:Close Long Quick:CXL ALLSYMB;ROUTE=ARCAL;TIF=DAY+;HANDINST=ANY;Share=Pos;Price=Bid-0.20;Sell
@@ -41,6 +43,14 @@ Ctrl+End:Close Long Quick:CXL ALLSYMB;ROUTE=ARCAL;TIF=DAY+;HANDINST=ANY;Share=Po
 {# Pre-trade calculation: position size based on SL and last price #}
 ,:Calc Risk {{risk}} ticks based on abs(Price-ask):Share=Price*100;DEFShare=Share;Price=Last+Ask-Bid;Price=Price*100;SShare=Price;Share=SShare-DEFShare;SShare=Share;Share=DEFShare;Price=Share/100;Share={{risk}}*100/SShare;ToggSShare=off;DEFShare=BP*0.5;TogSShare=off;DEFShare=Share/2;FOCUS Share-:Share/2:Share=Share/2
 .:Calc Risk {{2*risk}} ticks based on abs(Price-ask):Share=Price*100;DEFShare=Share;Price=Last+Ask-Bid;Price=Price*100;SShare=Price;Share=SShare-DEFShare;SShare=Share;Share=DEFShare;Price=Share/100;Share={{3*risk}}*100/SShare;ToggSShare=off;DEFShare=BP*0.5;TogSShare=off;DEFShare=Share/2;FOCUS Share
+Alt+,:ORB long HI-LOW {{risk}}:Price=HI-LOW;Price={{risk}}/Price;Share=Price;Price=HI;StopType=Market;ROUTE=STOP;StopPrice=HI;BUY=LOAD
+Alt+.:ORB short LOW-HI {{risk}}:Price=HI-LOW;Price={{risk}}/Price;Share=Price;Price=LOW;StopType=Market;ROUTE=STOP;StopPrice=LOW;SELL=LOAD
+
+Ctrl+,:BO long Price-LOW {{risk}}:StopPrice=Price;Price=Price-LOW;Price={{risk}}/Price;Share=Price;StopType=Limit;Price=StopPrice;ROUTE=STOP;BUY=LOAD;FOCUS share
+Ctrl+.:BO short Hi-Price {{risk}}:StopPrice=Price;Price=HI-Price;Price={{risk}}/Price;Share=Price;StopType=Limit;Price=StopPrice;ROUTE=STOP;SELL=LOAD;FOCUS share
+
+
+
 
 {# Profit projections based on price and current position #}
 /:PT Projected (price, position):Share=Price*100;DEFSHARE=Share;Price=AvgCost*100;Share=Price;SShare=Share;Share=DEFShare;Price=Share/100;
@@ -89,7 +99,7 @@ Home:Share size:Price={{account}}/Last;Share=Price/4;Price=last;Focus Share
 {# set default size #}
 Shift+:Default Size:DefShare=Share
 Ctrl+Home:Load DEFSHARE:Share=DEFSHARE+0
-Shift+ESC:Set DEFShare 0.25 Position:DEFShare=Pos/4
+Shift+ESC:Set DEFShare 0.25 Position:DEFShare=Pos/{{npt}}
 
 {# misc hotkeys #}
 F10:browser:https://seekingalpha.com/symbol/%SYMB%/press-releases

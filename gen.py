@@ -8,7 +8,7 @@ FUTURES_FACTOR = {
     'ES': 50,
     'MES': 5,
     'NQ': 20,
-    'MNQ': 0.50
+    'MNQ': 2
 }
 
 parser = argparse.ArgumentParser()
