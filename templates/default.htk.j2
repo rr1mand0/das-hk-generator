@@ -26,6 +26,8 @@ NumPad+:Chart ZoomIn:ZoomIn
 NumPad-:Chart ZoomOut:ZoomOut
 
 {# load operation #}
+Alt+`:Trail long:TIF=DAY+;Route=Stop;StopType=Trailing;TrailPrice=0.25;Buy=Load
+Alt+;:Trail Short:TIF=DAY+;Route=Stop;StopType=Trailing;TrailPrice=0.25;SELL=Load
 Shift+`:Load Stop Buy:ROUTE=Stop;StopType=Market;StopPrice=Price;Buy=Load
 Shift+;:Load Stop Sell:Route=Stop;StopType=Market;StopPrice=Price;Sell=Load
 ;:Load Limit Sell:ROUTE=Limit;SELL=Load
@@ -43,9 +45,12 @@ Ctrl+End:Close Long Quick:CXL ALLSYMB;ROUTE=ARCAL;TIF=DAY+;HANDINST=ANY;Share=Po
 {# Pre-trade calculation: position size based on SL and last price #}
 ,:Calc Risk {{risk}} ticks based on abs(Price-ask):Share=Price*100;DEFShare=Share;Price=Last+Ask-Bid;Price=Price*100;SShare=Price;Share=SShare-DEFShare;SShare=Share;Share=DEFShare;Price=Share/100;Share={{risk}}*100/SShare;ToggSShare=off;DEFShare=BP*0.5;TogSShare=off;DEFShare=Share/2;FOCUS Share-:Share/2:Share=Share/2
 .:Calc Risk {{2*risk}} ticks based on abs(Price-ask):Share=Price*100;DEFShare=Share;Price=Last+Ask-Bid;Price=Price*100;SShare=Price;Share=SShare-DEFShare;SShare=Share;Share=DEFShare;Price=Share/100;Share={{3*risk}}*100/SShare;ToggSShare=off;DEFShare=BP*0.5;TogSShare=off;DEFShare=Share/2;FOCUS Share
+
+{# ORB risk HI - LOW #}
 Alt+,:ORB long HI-LOW {{risk}}:Price=HI-LOW;Price={{risk}}/Price;Share=Price;Price=HI;StopType=Market;ROUTE=STOP;StopPrice=HI;BUY=LOAD
 Alt+.:ORB short LOW-HI {{risk}}:Price=HI-LOW;Price={{risk}}/Price;Share=Price;Price=LOW;StopType=Market;ROUTE=STOP;StopPrice=LOW;SELL=LOAD
 
+{# bar risk #}
 Ctrl+,:BO long Price-LOW {{risk}}:StopPrice=Price;Price=Price-LOW;Price={{risk}}/Price;Share=Price;StopType=Limit;Price=StopPrice;ROUTE=STOP;BUY=LOAD;FOCUS share
 Ctrl+.:BO short Hi-Price {{risk}}:StopPrice=Price;Price=HI-Price;Price={{risk}}/Price;Share=Price;StopType=Limit;Price=StopPrice;ROUTE=STOP;SELL=LOAD;FOCUS share
 
@@ -116,6 +121,9 @@ KeyLeft:Load pos-100:Share=Share-100
 KeyRight:Load pos+100:Share=Share+100
 KeyUp:Load Price + .01:Price=Price+0.01
 KeyDown:Load Price - .01:Price=Price-0.01
+
+Alt+KeyUp:TrailPrice+0.01:TrailPrice=TrailPrice+0.01
+Alt+KeyDown:TrailPrice-0.01:TrailPrice=TrailPrice-0.01
 
 Shift+KeyLeft:Load Pos-500:Share=Share-500
 Shift+KeyRight:Load Pos+500:Share=Share+500
