@@ -57,8 +57,8 @@ Alt+.:ORB short LOW-HI {{risk}}:Price=HI-LOW;Price={{risk}}/Price;Share=Price;Pr
 Ctrl+,:BO long Price-LOW {{risk}}:StopPrice=Price;Price=Price-LOW;Price={{risk}}/Price;Share=Price;StopType=Limit;Price=StopPrice;ROUTE=STOP;BUY=LOAD;FOCUS share
 Ctrl+.:BO short Hi-Price {{risk}}:StopPrice=Price;Price=HI-Price;Price={{risk}}/Price;Share=Price;StopType=Limit;Price=StopPrice;ROUTE=STOP;SELL=LOAD;FOCUS share
 
-
-
+{# Add based on new SL and Ask #}
+Shift+,:Calc Add on size based at target SL:Share=Price*100;DEFShare=Share;Price=AvgCost-Price;Share=Price*Pos;SShare=Share;Share=DEFShare;Price=Share/100;Price=Price-ask;Share=SShare/Price;SShare=share;Share=DEFShare;Price=Share/100;Share=SShare;TogSShare=off;Focus Share;
 
 {# Profit projections based on price and current position #}
 /:PT Projected (price, position):Share=Price*100;DEFSHARE=Share;Price=AvgCost*100;Share=Price;SShare=Share;Share=DEFShare;Price=Share/100;
